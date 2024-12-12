@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburger Löwen - Fanclub</title>
+    <style>
+        /* Allgemeines Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: white;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #003366; /* Dunkelblau */
+        }
+        header h1 {
+            font-size: 3em;
+            margin: 10px 0;
+        }
+        header h2 {
+            font-size: 1.5em;
+            font-style: italic;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 900px;
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #00509e;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #003366;
+        }
+        footer p {
+            margin: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .news-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .like-button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hamburger Löwen</h1>
+        <h2>Offizieller HSV-Fanclub</h2>
+    </header>
+    <main>
+        <!-- Login Section -->
+        <section id="login-section">
+            <h2>Anmelden</h2>
+            <input type="text" id="username" placeholder="Benutzername">
+            <input type="password" id="password" placeholder="Passwort">
+            <button onclick="login()">Anmelden</button>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile-section" class="hidden">
+            <h2>Dein Profil</h2>
+            <img id="profile-pic" src="https://via.placeholder.com/150" alt="Profilbild">
+            <p><strong>Benutzername:</strong> <span id="profile-username"></span></p>
+            <textarea id="profile-bio" placeholder="Schreibe etwas über dich..."></textarea>
+            <br>
+            <button onclick="saveProfile()">Speichern</button>
+        </section>
+
+        <!-- News Section -->
+        <section id="news-section" class="hidden">
+            <h2>News</h2>
+            <div id="news-feed"></div>
+            <textarea id="news-text" placeholder="Teile etwas mit!"></textarea>
+            <button onclick="postNews()">Posten</button>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat-section" class="hidden">
+            <h2>Chat</h2>
+            <div id="chat-box"></div>
+            <input type="text" id="message-input" placeholder="Nachricht schreiben...">
+            <button onclick="sendMessage()">Senden</button>
+        </section>
+
+        <!-- Calendar Section -->
+        <section id="calendar-section" class="hidden">
+            <h2>Kalender</h2>
+            <ul id="event-list"></ul>
+            <input type="text" id="event-input" placeholder="Neues Event hinzufügen...">
+            <button onclick="addEvent()">Hinzufügen</button>
+        </section>
+
+        <!-- Member List -->
+        <section id="members-section" class="hidden">
+            <h2>Mitgliederliste</h2>
+            <ul id="member-list"></ul>
+        </section>
+    </main>
+    <footer>
+        <p>Kontakt: tim.pengel@icloud.com | Telefon: +4915736394563</p>
+        <p>© 2024 Hamburger Löwen</p>
+    </footer>
+
+    <script>
+        // Beispielscript für die Mitgliederliste, Chat, News, Kalender
+        const admins = [
+            { username: "Tim Pengel", password: "HSV.Löwen" },
+            { username: "Erwin Wittkopp", password: "HSV.Löwen" }
+        ];
+        const bots = Array.from({ length: 200 }, (_, i) => ({ username: "Bot" + (i + 1) }));
+        const members = [...admins, ...bots];
+        let currentUser = null;
+
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const user = members.find(member => member.username === username);
+            if (user) {
+                currentUser = user.username;
+                document.getElementById("login-section").classList.add("hidden");
+                document.getElementById("profile-section").classList.remove("hidden");
+                document.getElementById("news-section").classList.remove("hidden");
+                document.getElementById("chat-section").classList.remove("hidden");
+                document.getElementById("calendar-section").classList.remove("hidden");
+                document.getElementById("members-section").classList.remove("hidden");
+                document.getElementById("profile-username").textContent = currentUser;
+            } else {
+                alert("Ungültiger Benutzername oder Passwort.");
+            }
+        }
+
+        function saveProfile() {
+            alert("Profil gespeichert!");
+        }
+
+        function postNews() {
+            const text = document.getElementById("news-text").value;
+            const newsFeed = document.getElementById("news-feed");
+            const newItem = document.createElement("div");
+            newItem.classList.add("news-item");
+            newItem.innerHTML = `<p>${text}</p><button class="like-button" onclick="likePost(this)">Gefällt mir (<span>0</span>)</button>`;
+            newsFeed.appendChild(newItem);
+        }
+
+        function likePost(button) {
+            const countSpan = button.querySelector("span");
+            countSpan.textContent = parseInt(countSpan.textContent) + 1;
+        }
+
+        function sendMessage() {
+            const chatBox = document.getElementById("chat-box");
+            const input = document.getElementById("message-input");
+            const message = document.createElement("p");
+            message.textContent = `${currentUser}: ${input.value}`;
+            chatBox.appendChild(message);
+            input.value = "";
+        }
+
+        function addEvent() {
+            const eventList = document.getElementById("event-list");
+            const input = document.getElementById("event-input");
+            const newEvent = document.createElement("li");
+            newEvent.textContent = input.value;
+            eventList.appendChild(newEvent);
+            input.value = "";
+        }
+
+        function populateMembers() {
+            const memberList = document.getElementById("member-list");
+            members.forEach(member => {
+                const li = document.createElement("li");
+                li.textContent = member.username;
+                memberList.appendChild(li);
+            });
+        }
+
+        window.onload = populateMembers;
+    </script>
+</body>
+</html>
